@@ -1,7 +1,0 @@
-v 4
-file . "seq_rec_testbench.vhd" "c1fbdb8798ee71112fcca03c2d2d7d54227e343a" "20250727205534.564":
-  entity seq_rec_testbench at 2( 45) + 0 on 15;
-  architecture tb_arch of seq_rec_testbench at 8( 141) + 0 on 16;
-file . "seq_rec.vhd" "9a7c7e4865f363e88813673fac7268159f423923" "20250727205534.543":
-  entity seq_rec at 2( 48) + 0 on 13;
-  architecture process_3 of seq_rec at 12( 212) + 0 on 14;
