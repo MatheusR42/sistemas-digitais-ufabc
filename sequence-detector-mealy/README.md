@@ -29,7 +29,7 @@ sudo apt-get install ghdl gtkwave
    ```bash
    ghdl -r seq_rec_testbench --vcd=resposta.vcd --stop-time=500ns
    ```
-3. **(Optional) Run and generate GHW waveform:**
+3. **Run and generate GHW waveform:**
    ```bash
    ghdl -r seq_rec --wave=resposta.ghw
    ghdl -r seq_rec_testbench --wave=resposta.ghw
