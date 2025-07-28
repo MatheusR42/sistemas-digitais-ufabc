@@ -34,13 +34,12 @@ begin
       -- Initialize
       SW(0) <= '1'; -- Assert reset
       KEY <= "00";
-      wait for 20 ns;
+      wait for 10 ns;
 
       SW(0) <= '0'; -- Deassert reset
       wait for 10 ns;
 
       -- Send bit sequence: 1 1 0 1 -> should detect 1101 → Z='1'
-      -- Simulate rising edges on KEY(0) to increment counter
       KEY(1) <= '1'; wait for 10 ns; -- Rising edge
       KEY(1) <= '0'; wait for 10 ns; -- Falling edge
 
@@ -53,11 +52,35 @@ begin
       KEY(1) <= '1'; wait for 10 ns; -- Rising edge
       KEY(1) <= '0'; wait for 10 ns; -- Falling edge
 
-      -- for i in 0 to 7 loop
-      --    KEY(0) <= '1'; wait for 10 ns; -- Rising edge
-      --    KEY(0) <= '0'; wait for 10 ns; -- Falling edge
-      -- end loop;
+      -- now we already have 1 from the last sequence, so let add 1 0 1 to detect again
+      KEY(1) <= '1'; wait for 10 ns; -- Rising edge
+      KEY(1) <= '0'; wait for 10 ns; -- Falling edge
 
+      KEY(0) <= '1'; wait for 10 ns; -- Rising edge
+      KEY(0) <= '0'; wait for 10 ns; -- Falling edge
+
+      KEY(1) <= '1'; wait for 10 ns; -- Rising edge
+      KEY(1) <= '0'; wait for 10 ns; -- Falling edge
+
+      -- now we will reset the machine again and Send bit sequence: 1 1 0 1
+      SW(0) <= '1'; -- Assert reset
+      wait for 10 ns;
+
+      SW(0) <= '0'; -- Deassert reset
+      wait for 10 ns;
+
+      -- Send bit sequence: 1 1 0 1 -> should detect 1101 → Z='1'
+      KEY(1) <= '1'; wait for 10 ns; -- Rising edge
+      KEY(1) <= '0'; wait for 10 ns; -- Falling edge
+
+      KEY(1) <= '1'; wait for 10 ns; -- Rising edge
+      KEY(1) <= '0'; wait for 10 ns; -- Falling edge
+
+      KEY(0) <= '1'; wait for 10 ns; -- Rising edge
+      KEY(0) <= '0'; wait for 10 ns; -- Falling edge
+
+      KEY(1) <= '1'; wait for 10 ns; -- Rising edge
+      KEY(1) <= '0'; wait for 10 ns; -- Falling edge
       wait;
    end process;
 

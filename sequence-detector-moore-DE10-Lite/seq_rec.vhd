@@ -20,65 +20,58 @@ end seq_rec;
 architecture process_3 of seq_rec is
    type state_type is (A, B, C, D, E);
    signal state : state_type := A;
-   signal next_state : state_type := A;
    signal x : std_logic := '0'; -- input value from keys
    signal reset : std_logic := '0'; -- reset from SW[0]
 begin
 
-   input_control: process (KEY)
+   input_control: process (KEY, SW)
 		variable tmp: std_logic := '0';
 			begin
-				if (rising_edge(KEY(0))) then
-					tmp := '0';
-				elsif (rising_edge(KEY(1))) then
-					tmp := '1';
-				end if;
+            if SW(0) = '1' then
+               state <= A;
+            else 
+               if (rising_edge(KEY(0))) then
+                  tmp := '0';
+               elsif (rising_edge(KEY(1))) then
+                  tmp := '1';
+               end if;
 
-            if rising_edge(KEY(1)) or rising_edge(KEY(0)) then
-               case state is
-                  when A =>
-                     if tmp = '1' then
-                        next_state <= B;
-                     else
-                        next_state <= A;
-                     end if;
-                  when B =>
-                     if tmp = '1' then
-                        next_state <= C;
-                     else
-                        next_state <= A;
-                     end if;
-                  when C =>
-                     if tmp = '1' then
-                        next_state <= C;
-                     else
-                        next_state <= D;
-                     end if;
-                  when D =>
-                     if tmp = '1' then
-                        next_state <= E;
-                     else
-                        next_state <= A;
-                     end if;
-                  when E =>
-                     if tmp = '1' then
-                        next_state <= C;
-                     else
-                        next_state <= A;
-                     end if;
-               end case;
-				end if;
+               if rising_edge(KEY(1)) or rising_edge(KEY(0)) then
+                  case state is
+                     when A =>
+                        if tmp = '1' then
+                           state <= B;
+                        else
+                           state <= A;
+                        end if;
+                     when B =>
+                        if tmp = '1' then
+                           state <= C;
+                        else
+                           state <= A;
+                        end if;
+                     when C =>
+                        if tmp = '1' then
+                           state <= C;
+                        else
+                           state <= D;
+                        end if;
+                     when D =>
+                        if tmp = '1' then
+                           state <= E;
+                        else
+                           state <= A;
+                        end if;
+                     when E =>
+                        if tmp = '1' then
+                           state <= C;
+                        else
+                           state <= A;
+                        end if;
+                  end case;
+               end if;
+            end if;
 		end process;
-
-   switch_control: process(SW, next_state)
-   begin
-      -- SW[0] is reset (active high)
-      if SW(0) = '1' then
-         state <= A;
-      else 
-         state <= next_state;
-      end if;
-   end process;
 
    -- Process: State to Gray code for LEDR
    led_control: process(state)

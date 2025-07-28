@@ -65,6 +65,9 @@ The testbench (`seq_rec_testbench.vhd`) applies several input sequences to the d
 - You can correlate the input `X` transitions with the output `Z` to verify correct detection and overlapping behavior.
 
 
+#### Moore Machine and State Table
+![Example GTKWave output](./diagram.png)
+
 #### Example Waveform
 ![Example GTKWave output](./wave.png)
 
