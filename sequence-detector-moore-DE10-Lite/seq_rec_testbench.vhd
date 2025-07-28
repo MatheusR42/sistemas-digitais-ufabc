@@ -40,23 +40,24 @@ begin
       wait for 10 ns;
 
       -- Send bit sequence: 1 1 0 1 -> should detect 1101 → Z='1'
-      KEY <= "10"; wait for 20 ns; -- x = '1' (KEY[1])
-      KEY <= "10"; wait for 20 ns; -- x = '1' (KEY[1])
-      KEY <= "01"; wait for 20 ns; -- x = '0' (KEY[0])
-      KEY <= "10"; wait for 20 ns; -- x = '1' (KEY[1])
+      -- Simulate rising edges on KEY(0) to increment counter
+      KEY(1) <= '1'; wait for 10 ns; -- Rising edge
+      KEY(1) <= '0'; wait for 10 ns; -- Falling edge
 
-      -- Another sequence: 1 1 0 1 again (overlapping)
-      KEY <= "10"; wait for 20 ns;
-      KEY <= "10"; wait for 20 ns;
-      KEY <= "01"; wait for 20 ns;
-      KEY <= "10"; wait for 20 ns;
+      KEY(1) <= '1'; wait for 10 ns; -- Rising edge
+      KEY(1) <= '0'; wait for 10 ns; -- Falling edge
 
-      -- Send a false pattern: 1 0 1 1 (should NOT trigger Z='1')
-      KEY <= "01"; wait for 20 ns;
-      KEY <= "10"; wait for 20 ns;
-      KEY <= "01"; wait for 20 ns;
-      KEY <= "10"; wait for 20 ns;
-      KEY <= "10"; wait for 20 ns;
+      KEY(0) <= '1'; wait for 10 ns; -- Rising edge
+      KEY(0) <= '0'; wait for 10 ns; -- Falling edge
+
+      KEY(1) <= '1'; wait for 10 ns; -- Rising edge
+      KEY(1) <= '0'; wait for 10 ns; -- Falling edge
+
+      -- for i in 0 to 7 loop
+      --    KEY(0) <= '1'; wait for 10 ns; -- Rising edge
+      --    KEY(0) <= '0'; wait for 10 ns; -- Falling edge
+      -- end loop;
+
       wait;
    end process;
 

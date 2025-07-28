@@ -1,6 +1,9 @@
 # Sequence Detector (VHDL)
 
-https://g.co/gemini/share/8abe6d723705
+Website to test 7-segment leds:
+
+[https://g.co/gemini/share/8abe6d723705](https://g.co/gemini/share/8abe6d723705)
+
 
 This project implements a sequence detector using a Finite State Machine (FSM) in VHDL. It detects the binary sequence **1101** on input `X`. When the sequence is recognized, output `Z` is set to `'1'` for one clock cycle; otherwise, `Z` remains `'0'`.
 
@@ -23,6 +26,7 @@ sudo apt-get install ghdl gtkwave
 
 ## ▶️ Running the Simulation
 
+c
 ```
    ghdl -a seq_rec.vhd && ghdl -a seq_rec_testbench.vhd && ghdl -e seq_rec_testbench && ghdl -r seq_rec_testbench --vcd=resposta.vcd --stop-time=500ns && ghdl -r seq_rec --wave=resposta.ghw && ghdl -r seq_rec_testbench --wave=resposta.ghw --stop-time=500ns && gtkwave resposta.vcd &
 ```

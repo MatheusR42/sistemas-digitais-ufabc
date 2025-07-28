@@ -19,90 +19,80 @@ end seq_rec;
 
 architecture process_3 of seq_rec is
    type state_type is (A, B, C, D, E);
-   signal state, next_state : state_type;
+   signal state : state_type := A;
+   signal next_state : state_type := A;
    signal x : std_logic := '0'; -- input value from keys
    signal reset : std_logic := '0'; -- reset from SW[0]
-   signal state_bin : std_logic_vector(2 downto 0) := "000"; -- binary state for LEDR, initialized to all off
 begin
 
    input_control: process (KEY)
-		variable tmp: std_logic_vector(3 downto 0);
+		variable tmp: std_logic := '0';
 			begin
-				if (rising_edge(KEY(1))) then
-					x <= '1';
-				elsif (rising_edge(KEY(0))) then
-					x <= '0';
+				if (rising_edge(KEY(0))) then
+					tmp := '0';
+				elsif (rising_edge(KEY(1))) then
+					tmp := '1';
+				end if;
+
+            if rising_edge(KEY(1)) or rising_edge(KEY(0)) then
+               case state is
+                  when A =>
+                     if tmp = '1' then
+                        next_state <= B;
+                     else
+                        next_state <= A;
+                     end if;
+                  when B =>
+                     if tmp = '1' then
+                        next_state <= C;
+                     else
+                        next_state <= A;
+                     end if;
+                  when C =>
+                     if tmp = '1' then
+                        next_state <= C;
+                     else
+                        next_state <= D;
+                     end if;
+                  when D =>
+                     if tmp = '1' then
+                        next_state <= E;
+                     else
+                        next_state <= A;
+                     end if;
+                  when E =>
+                     if tmp = '1' then
+                        next_state <= C;
+                     else
+                        next_state <= A;
+                     end if;
+               end case;
 				end if;
 		end process;
 
-   switch_control: process(SW)
+   switch_control: process(SW, next_state)
    begin
       -- SW[0] is reset (active high)
       if SW(0) = '1' then
-         reset <= '1';
-      else
-         reset <= '0';
-      end if;
-   end process;
-
-   -- Process: State register with asynchronous reset and rising_edge for KEYs
-   state_register: process(KEY, reset)
-   begin
-      if reset = '1' then
          state <= A;
-         state_bin <= "000";
-      elsif rising_edge(KEY(1)) or rising_edge(KEY(0)) then
+      else 
          state <= next_state;
       end if;
    end process;
 
-   -- Process: Next state logic
-   next_state_func: process(x, state)
-   begin
-      case state is
-         when A =>
-            if x = '1' then
-               next_state <= B;
-            else
-               next_state <= A;
-            end if;
-         when B =>
-            if x = '1' then
-               next_state <= C;
-            else
-               next_state <= A;
-            end if;
-         when C =>
-            if x = '1' then
-               next_state <= C;
-            else
-               next_state <= D;
-            end if;
-         when D =>
-            if x = '1' then
-               next_state <= E;
-            else
-               next_state <= A;
-            end if;
-         when E =>
-            if x = '1' then
-               next_state <= C;
-            else
-               next_state <= A;
-            end if;
-      end case;
-   end process;
-
    -- Process: State to Gray code for LEDR
    led_control: process(state)
+   variable state_bin: std_logic_vector(2 downto 0) := "000";
    begin
       case state is
-         when A => state_bin <= "000"; -- A (Gray: 000)
-         when B => state_bin <= "001"; -- B (Gray: 001)
-         when C => state_bin <= "011"; -- C (Gray: 011)
-         when D => state_bin <= "010"; -- D (Gray: 010)
-         when E => state_bin <= "110"; -- E (Gray: 110)
+         when A => state_bin := "000"; -- A (Gray: 000)
+         when B => state_bin := "001"; -- B (Gray: 001)
+         when C => state_bin := "011"; -- C (Gray: 011)
+         when D => state_bin := "010"; -- D (Gray: 010)
+         when E => state_bin := "110"; -- E (Gray: 110)
+         when others  => state_bin := "111"; -- E (Gray: 111)
       end case;
+      
       LEDR <= state_bin;
    end process;
 
