@@ -12,7 +12,8 @@ entity seq_rec is
       HEX2   : out std_logic_vector(6 downto 0);
       HEX3   : out std_logic_vector(6 downto 0);
       HEX4   : out std_logic_vector(6 downto 0);
-      HEX5   : out std_logic_vector(6 downto 0)
+      HEX5   : out std_logic_vector(6 downto 0);
+      Z      : out std_logic
    );
 end seq_rec;
 
@@ -21,26 +22,26 @@ architecture process_3 of seq_rec is
    signal state, next_state : state_type;
    signal x : std_logic := '0'; -- input value from keys
    signal reset : std_logic := '0'; -- reset from SW[0]
-   signal state_bin : std_logic_vector(2 downto 0); -- binary state for LEDR
+   signal state_bin : std_logic_vector(2 downto 0) := "000"; -- binary state for LEDR, initialized to all off
 begin
 
-   -- Process: Input control (KEYs and SW)
-   input_control: process(KEY, SW)
+   input_control: process (KEY)
+		variable tmp: std_logic_vector(3 downto 0);
+			begin
+				if (rising_edge(KEY(1))) then
+					x <= '1';
+				elsif (rising_edge(KEY(0))) then
+					x <= '0';
+				end if;
+		end process;
+
+   switch_control: process(SW)
    begin
       -- SW[0] is reset (active high)
       if SW(0) = '1' then
          reset <= '1';
       else
          reset <= '0';
-      end if;
-
-      -- KEY[1] = x='1', KEY[0] = x='0' (active low)
-      if KEY(1) = '0' then
-         x <= '1';
-      elsif KEY(0) = '0' then
-         x <= '0';
-      else
-         x <= '0'; -- default
       end if;
    end process;
 
@@ -49,6 +50,7 @@ begin
    begin
       if reset = '1' then
          state <= A;
+         state_bin <= "000";
       elsif rising_edge(KEY(1)) or rising_edge(KEY(0)) then
          state <= next_state;
       end if;
@@ -123,5 +125,17 @@ begin
          HEX4 <= "0000110"; -- E
          HEX5 <= "0100001"; -- D
       end if;
+   end process;
+
+
+   -- Process: Output logic
+   output_func: process (state)
+   begin
+      case state is
+         when E =>
+            Z <= '1';
+         when others =>
+            Z <= '0';
+      end case;
    end process;
 end process_3;

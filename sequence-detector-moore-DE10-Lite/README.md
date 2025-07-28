@@ -23,6 +23,10 @@ sudo apt-get install ghdl gtkwave
 
 ## ▶️ Running the Simulation
 
+```
+   ghdl -a seq_rec.vhd && ghdl -a seq_rec_testbench.vhd && ghdl -e seq_rec_testbench && ghdl -r seq_rec_testbench --vcd=resposta.vcd --stop-time=500ns && ghdl -r seq_rec --wave=resposta.ghw && ghdl -r seq_rec_testbench --wave=resposta.ghw --stop-time=500ns && gtkwave resposta.vcd &
+```
+
 1. **Analyze the VHDL files:**
    ```bash
    ghdl -a seq_rec.vhd
