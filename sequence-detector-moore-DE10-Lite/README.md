@@ -1,5 +1,7 @@
 # Sequence Detector (VHDL)
 
+https://g.co/gemini/share/8abe6d723705
+
 This project implements a sequence detector using a Finite State Machine (FSM) in VHDL. It detects the binary sequence **1101** on input `X`. When the sequence is recognized, output `Z` is set to `'1'` for one clock cycle; otherwise, `Z` remains `'0'`.
 
 ## 🔍 How It Works

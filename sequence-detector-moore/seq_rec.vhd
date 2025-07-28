@@ -62,7 +62,7 @@ begin
    end process;
 
    -- Process 3: Output logic
-   output_func: process (X, state)
+   output_func: process (state)
    begin
       case state is
          when E =>
